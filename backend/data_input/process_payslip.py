@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import BinaryIO
 
 import pypdf
 
@@ -8,7 +9,7 @@ class PayslipProcessor:
         self.payslip = None
 
     # Input payslip
-    def read(self, payslip_file: str):
+    def read(self, payslip_file: BinaryIO):
         output = {}
         text = (pypdf.PdfReader(payslip_file).pages[0].extract_text()).splitlines()
         for line_num, line in enumerate(text, start=1):
@@ -23,8 +24,7 @@ class PayslipProcessor:
                     else:
                         cur_title += item
                 output[cur_title] = cur_value
-        self.payslip = process_output_dict(output)
-        return bool(self.payslip)
+        return process_output_dict(output)
 
 
 def process_output_dict(items):
