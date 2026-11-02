@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { CssBaseline } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { supabase } from './api/supabase';
 import Navbar from './components/Navbar';
 import LoginPage from './pages/Access/LoginPage';
@@ -33,31 +35,33 @@ export default function App() {
   }, []);
 
   return (
-    <>
-      <CssBaseline />
-      <div
-        className="app-shell"
-        style={{ maxWidth: '100%', overflowX: 'clip', width: '100%' }}
-      >
-        <Navbar isAuthLoading={isAuthLoading} user={user} />
-        <main className="page-content">
-          <Routes>
-            <Route
-              element={
-                <HomePage
-                  isLoading={isAuthLoading}
-                  name={user?.name ?? null}
-                  userId={user?.id ?? null}
-                />
-              }
-              path="/"
-            />
-            <Route element={<AddDataPage />} path="/add" />
-            <Route element={<SignUpPage />} path="/signup" />
-            <Route element={<LoginPage />} path="/login" />
-          </Routes>
-        </main>
-      </div>
-    </>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <>
+        <CssBaseline />
+        <div
+          className="app-shell"
+          style={{ maxWidth: '100%', overflowX: 'clip', width: '100%' }}
+        >
+          <Navbar isAuthLoading={isAuthLoading} user={user} />
+          <main className="page-content">
+            <Routes>
+              <Route
+                element={
+                  <HomePage
+                    isLoading={isAuthLoading}
+                    name={user?.name ?? null}
+                    userId={user?.id ?? null}
+                  />
+                }
+                path="/"
+              />
+              <Route element={<AddDataPage />} path="/add" />
+              <Route element={<SignUpPage />} path="/signup" />
+              <Route element={<LoginPage />} path="/login" />
+            </Routes>
+          </main>
+        </div>
+      </>
+    </LocalizationProvider>
   );
 }

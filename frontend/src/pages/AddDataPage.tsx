@@ -1,6 +1,7 @@
 import { Alert, Box, Button, CircularProgress, Typography } from '@mui/material';
 import { type ChangeEvent, useState } from 'react';
 import { uploadPayslip } from '../api/payslip_calls';
+import { AddRecord } from '../components/AddRecord';
 
 type UploadStatus = 'idle' | 'uploading' | 'success' | 'error';
 
@@ -8,7 +9,7 @@ export default function AddDataPage() {
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<UploadStatus>('idle');
   const [errorMessage, setErrorMessage] = useState('');
-  const [result, setResult] = useState<unknown>(null);
+  const [result, setResult] = useState<any>(null);
 
   function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
     setFile(event.target.files?.[0] ?? null);
@@ -27,6 +28,7 @@ export default function AddDataPage() {
     try {
       setResult(await uploadPayslip(file));
       setStatus('success');
+      console.log(result);
     } catch (error) {
       setStatus('error');
       setErrorMessage(error instanceof Error ? error.message : 'The upload failed.');
@@ -72,6 +74,11 @@ export default function AddDataPage() {
       )}
       {status === 'success' && (
         <Box component="pre" sx={{ mt: 2, whiteSpace: 'pre-wrap' }}>
+          {Object.keys(result).map((name:any)=> (
+            <Box id={name} key={name}>
+              <AddRecord name={name} value={result[name]} />
+            </Box>
+          ))}
           {JSON.stringify(result, null, 2)}
         </Box>
       )}
