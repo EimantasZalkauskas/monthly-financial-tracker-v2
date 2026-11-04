@@ -8,10 +8,12 @@ from fastapi.middleware.cors import CORSMiddleware
 if __package__:
     from backend.data_input.process_payslip import PayslipProcessor
     from backend.db.db_connection import SupabaseConnection
+    from backend.records.process_records import router as record_router
     from backend.user.user_functions import router as user_router
 else:
     from data_input.process_payslip import PayslipProcessor
     from db.db_connection import SupabaseConnection
+    from records.process_records import router as record_router
     from user.user_functions import router as user_router
 
 load_dotenv(Path(__file__).resolve().parent / ".env")
@@ -22,6 +24,7 @@ db_conn = SupabaseConnection(
 )
 app.state.db_conn = db_conn
 app.include_router(user_router)
+app.include_router(record_router)
 payslip_processor = PayslipProcessor()
 
 frontend_origins = os.getenv(
